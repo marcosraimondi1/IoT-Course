@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h5>HELLO WORLD!!</h5>
+
+    <script src="https://unpkg.com/mqtt@4.1.0/dist/mqtt.min.js"></script>
+    <script>
+        const options = {
+            connectTimeout: 5000,
+
+            // Authentication
+            clientId: 'emqx',
+            //username: 'testuser',
+            //password: '121212',
+            keepalive: 60,
+            clean: true,
+        }
+
+        // WebSocket connect url
+        const WebSocket_URL = 'ws://18.228.205.3:8083/mqtt';
+
+
+        const client = mqtt.connect(WebSocket_URL, options);
+
+        client.on('connect', () => {
+            console.log('Connect success');
+
+            client.subscribe('testtopic2', (err) => {
+                if (!err) {
+                    console.log("Subscription - SUCCESS");
+                }
+            });
+
+            // client.publish('testtopic', '', {'qos': 2, 'retain': true}, ()=>{
+            //     console.log("Publicado");
+            // });
+        })
+
+        client.on('message', (topic, msg) => {
+            console.log('The topic is ' + topic + ' and the message is ' + msg.toString());
+        })
+
+        client.on('reconnect', (error) => {
+            console.log('reconnecting:', error);
+        });
+
+        client.on('error', (error) => {
+            console.log('Connect Error:', error);
+        });
+    </script>
+
+
+</body>
+
+</html>
